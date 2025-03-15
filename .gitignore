@@ -1,6 +1,42 @@
-# virtual env
-venv
+# Python
+*.pyc
+*.pyo
+__pycache__/
 
-# python files
-__pycache__
+# Flask specific
+instance/
+.env
+*.db
+*.sqlite3
 
+# Virtual environment
+venv/
+env/
+backend/langflow-env/
+backend/.flaskenv
+backend/app/.env
+
+
+# IDEs and Editors
+.vscode/
+.idea/
+
+# MacOS specific
+.DS_Store
+
+# Log files
+*.log
+
+# Pytest
+.pytest_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Coverage
+.coverage
+*.coveragerc
+.env
+.env
+.env
+.env
