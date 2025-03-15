@@ -1,6 +1,6 @@
 # virtual env
-.venv
+venv
 
-#python files
+# python files
 __pycache__
 
