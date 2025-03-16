@@ -14,6 +14,9 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
+
+
+
 export default function JournalScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -72,41 +75,125 @@ export default function JournalScreen() {
   };
 
 
+  // const handleSave = async () => {
+  //   try {
+  //     const combinedAnswers = answers.join('\n\n');
+  //     const response = await fetch('http://127.0.0.1:5000/langflow/feedback', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ 
+  //         message: combinedAnswers,
+  //         mood: mood,
+  //         questions: questions 
+  //       }),
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error('Something went wrong with the request');
+  //     }
+  
+  //     const aiResponse = await response.json();
+  
+  //     router.push({
+  //       pathname: '/response',  // Changed from '/(tabs)/response' to '/response'
+  //       params: { 
+  //         mood: JSON.stringify(mood),
+  //         analysis: JSON.stringify(aiResponse)
+  //       }
+  //     });
+  
+  //   } catch (error) {
+  //     console.log("Error: ", error);
+  //   }
+  // };
+  
+  
   const handleSave = async () => {
-    try {
-      const combinedAnswers = answers.join('\n\n');
-      const response = await fetch('http://127.0.0.1:5000/langflow/feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          message: combinedAnswers,
-          mood: mood,
-          questions: questions 
-        }),
-      });
+
+    const combinedAnswers = JSON.stringify(answers.join('\n\n'), null, 2);
+    
+    const apiKey = 'api_key'
+    const data = {
+      model: 'gpt-3.5-turbo', // or "gpt-3.5-turbo"
+      messages: [
+        { role: 'system', content: `
+          
+          
+           Your role: Therapist & Emotional Support AI 
+
+
+            "You are an empathetic, understanding, and emotionally intelligent virtual counselor and emotional support companion. Your purpose is to provide a safe, non-judgmental space for people to share how their day is going — whether they're feeling happy, sad, stressed, anxious, overwhelmed, or simply need someone to listen. You will respond with warmth and kindness, offering a space for the user to express themselves freely. Your responses will include active listening and emotional validation, acknowledging their feelings and helping them feel heard and understood.
+
+            Your goal is not to provide quick fixes, but to support and empower the individual. Offer personalized recommendations based on their emotional state, such as relaxation techniques, grounding exercises, self-care practices, gentle productivity tips, journaling prompts, breathing exercises, or encouraging affirmations. If they feel stuck or overwhelmed, gently guide them toward a positive mindset shift or a new perspective that fosters growth and healing.
+
+            You will also suggest simple and nurturing activities that encourage emotional healing, self-compassion, and self-reflection. Whether it's taking a mindful walk, practicing gratitude, or exploring something creative, your aim is to uplift their spirit and help them regain balance and peace of mind. You will tailor your suggestions based on the user's unique feelings and context, ensuring that they always feel supported, valued, and empowered to move forward with a sense of hope and positivity.
+
+            Above all, remain patient and compassionate. Your tone should be gentle and encouraging, always ensuring that the individual feels safe, understood, and not alone in their emotional journey. You are a guide, a source of comfort, and a reminder that it's okay to feel what they feel, but they have the strength to navigate through it."
+
+            I WANT YOU TO OUTPUT IN A JSON TYPE OF THING LIKE THE BELOW
+            {text: (inert text here),
+            personalized exercises: (any personlized thing that can help)
+            }
+
+            kepp it well formated.
+
+            Also, CAN YOU PLESSE try make it concise and short, because  it has to be viewed ona  mobile phone and people are very distracted/busy, so gotta make it sweet, sharp and memorable.
+
+            The 'text: (inert text here)' part should be kind of short, and dont ask more questions or try to follow up, its a one time thing. Also, for 'personalized exercises' do like a list of 4-5 activitities kind of stuff, dont crazy elaborate, keep it short and sweer
+          
+          `
+
+
+},
+        { role: 'user', content: combinedAnswers }
+      ],
+      temperature: 0.7
+    };
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    // Assuming the response has the structure from OpenAI's ChatCompletion API:
+    const content = json.choices[0].message.content;
+
   
-      if (!response.ok) {
-        throw new Error('Something went wrong with the request');
-      }
+      // const combinedAnswers = answers.join('\n\n');
+      // const response = await fetch('http://127.0.0.1:5000/langflow/feedback', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ 
+      //     message: combinedAnswers,
+      //   }),
+      // });
   
-      const aiResponse = await response.json();
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.error || 'Something went wrong with the request');
+      // }
   
       router.push({
-        pathname: '/response', 
+        pathname: '/response',
         params: { 
-          mood: JSON.stringify(mood),
-          analysis: JSON.stringify(aiResponse)
+          aiResponse: JSON.stringify(content)  // Note: Changed from analysis to aiResponse
         }
       });
   
-    } catch (error) {
-      console.log("Error: ", error);
-    }
-  };
-  
-  
+};
 
   const questions = getMoodQuestions(mood?.label || '');
 

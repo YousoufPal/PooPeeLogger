@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
 from .langflow.langflow_helper import analyze_journal_entry, run_flow
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+# import spotipy
+# from spotipy.oauth2 import SpotifyClientCredentials
 import os
 
 api = Blueprint('api', __name__)
 
 # Initialize Spotify client - will automatically use SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
+# sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
 
 @api.route('/analyze', methods=['POST'])
 def analyze_responses():
