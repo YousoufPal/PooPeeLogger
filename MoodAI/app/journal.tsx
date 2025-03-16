@@ -78,7 +78,7 @@ export default function JournalScreen() {
   const handleSave = async () => {
     const qa_pairs = questions.map((q, i) => `Q: ${q}\nA: ${answers[i]}`).join('\n\n');
     
-    const apiKey = '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';
+    const apiKey = '';
     const data = {
       model: 'gpt-3.5-turbo',
       messages: [
