@@ -75,7 +75,7 @@ export default function JournalScreen() {
   const handleSave = async () => {
     try {
       const combinedAnswers = answers.join('\n\n');
-      const response = await fetch('http://your-backend-url/langflow/feedback', {
+      const response = await fetch('http://127.0.0.1:5000/langflow/feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export default function JournalScreen() {
       const aiResponse = await response.json();
   
       router.push({
-        pathname: '/response', // Changed from '/screens/response' to '/action'
+        pathname: '/response', 
         params: { 
           mood: JSON.stringify(mood),
           analysis: JSON.stringify(aiResponse)
