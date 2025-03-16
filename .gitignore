@@ -15,7 +15,7 @@ env/
 backend/langflow-env/
 backend/.flaskenv
 backend/app/.env
-
+.venv/
 
 # IDEs and Editors
 .vscode/
