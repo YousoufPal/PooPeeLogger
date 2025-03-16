@@ -74,13 +74,17 @@ export default function JournalScreen() {
 
   const handleSave = async () => {
     try {
-      const combinedAnswers = answers.join('\n\n'); // merge all answers into one string
+      const combinedAnswers = answers.join('\n\n');
       const response = await fetch('http://your-backend-url/langflow/feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: combinedAnswers }),
+        body: JSON.stringify({ 
+          message: combinedAnswers,
+          mood: mood,
+          questions: questions 
+        }),
       });
   
       if (!response.ok) {
@@ -89,10 +93,12 @@ export default function JournalScreen() {
   
       const aiResponse = await response.json();
   
-      // Navigate to the response screen with the AI response
       router.push({
-        pathname: '/screens/response', // Adjusted path to point to Mood/screens/response
-        params: { aiResponse }, // Send the aiResponse as a parameter
+        pathname: '/action', // Changed from '/screens/response' to '/action'
+        params: { 
+          mood: JSON.stringify(mood),
+          analysis: JSON.stringify(aiResponse)
+        }
       });
   
     } catch (error) {
