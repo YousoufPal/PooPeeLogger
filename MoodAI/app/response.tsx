@@ -41,13 +41,17 @@ export default function ResponseScreen() {
       
       <ScrollView style={styles.scrollView}>
         <View style={styles.contentContainer}>
+          
+{/*           
           {mood && (
             <View style={styles.moodSection}>
               <Text style={styles.emoji}>{mood.emoji}</Text>
               <Text style={styles.title}>You're feeling {mood.label}</Text>
             </View>
           )}
-          
+           */}
+
+
           {/* AI Analysis Section */}
           {aiResponse && (
             <View style={styles.card}>
@@ -56,9 +60,9 @@ export default function ResponseScreen() {
                 <Text style={styles.cardTitle}>AI Analysis</Text>
               </View>
               
-              <Text style={styles.summaryText}>{aiResponse.summary}</Text>
+              <Text>{JSON.stringify(aiResponse)}</Text> {/* Display aiResponse */}
               
-              {/* Action Items */}
+              {/* Action Items
               <View style={styles.actionItems}>
                 <Text style={styles.sectionTitle}>Recommended Actions:</Text>
                 {aiResponse.actionItems.map((item, index) => (
@@ -67,15 +71,15 @@ export default function ResponseScreen() {
                     <Text style={styles.actionItemText}>{item}</Text>
                   </View>
                 ))}
-              </View>
+              </View> */}
 
               {/* Additional Insights */}
-              {aiResponse.langflowInsights && (
+              {/* {aiResponse.langflowInsights && (
                 <View style={styles.insights}>
                   <Text style={styles.sectionTitle}>Additional Insights:</Text>
                   <Text style={styles.insightsText}>{aiResponse.langflowInsights}</Text>
                 </View>
-              )}
+              )} */}
             </View>
           )}
         </View>

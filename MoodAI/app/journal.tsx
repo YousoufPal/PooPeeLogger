@@ -94,7 +94,7 @@ export default function JournalScreen() {
       const aiResponse = await response.json();
   
       router.push({
-        pathname: '/action', // Changed from '/screens/response' to '/action'
+        pathname: '/response', // Changed from '/screens/response' to '/action'
         params: { 
           mood: JSON.stringify(mood),
           analysis: JSON.stringify(aiResponse)
