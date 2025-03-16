@@ -71,10 +71,36 @@ export default function JournalScreen() {
     router.back();
   };
 
-  const handleSave = () => {
-    // TODO: Save journal entry to database
-    router.push('/history');
+
+  const handleSave = async () => {
+    try {
+      const combinedAnswers = answers.join('\n\n'); // merge all answers into one string
+      const response = await fetch('http://your-backend-url/langflow/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: combinedAnswers }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Something went wrong with the request');
+      }
+  
+      const aiResponse = await response.json();
+  
+      // Navigate to the response screen with the AI response
+      router.push({
+        pathname: '/screens/response', // Adjusted path to point to Mood/screens/response
+        params: { aiResponse }, // Send the aiResponse as a parameter
+      });
+  
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
+  
+  
 
   const questions = getMoodQuestions(mood?.label || '');
 
