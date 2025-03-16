@@ -196,7 +196,6 @@ export default function ProfileScreen() {
           <View style={styles.bottomPadding} />
         </ScrollView>
 
-        {/* Bottom Navigation Bar */}
         <BlurView intensity={90} style={styles.bottomNavContainer}>
           <View style={styles.bottomNav}>
             <TouchableOpacity style={styles.navItem} onPress={() => router.push('/')}>
@@ -231,10 +230,16 @@ export default function ProfileScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Profile</Text>
+          <View style={styles.headerLeft}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Image 
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
           <TouchableOpacity>
             <Ionicons name="settings-outline" size={24} color="#333" />
           </TouchableOpacity>
@@ -242,7 +247,6 @@ export default function ProfileScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Profile Card */}
         <View style={styles.profileCard}>
           <TouchableOpacity onPress={handleImageUpload} style={styles.profileImageContainer}>
             <Image
@@ -257,7 +261,6 @@ export default function ProfileScreen() {
           <Text style={styles.profileEmail}>Member since {new Date(session.user.created_at).toLocaleDateString()}</Text>
         </View>
 
-        {/* Settings Card */}
         <View style={styles.settingsCard}>
           <Text style={styles.sectionTitle}>Settings</Text>
           <TouchableOpacity style={styles.settingItem}>
@@ -288,7 +291,6 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Support Card */}
         <View style={styles.supportCard}>
           <Text style={styles.sectionTitle}>Support</Text>
           <TouchableOpacity style={styles.settingItem}>
@@ -310,7 +312,6 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Logout Button */}
         <TouchableOpacity 
           style={styles.logoutButton} 
           onPress={handleLogout}
@@ -372,6 +373,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
   },
   headerTitle: {
     fontSize: 20,

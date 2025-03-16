@@ -73,10 +73,15 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header with Navigation Bar */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>MoodAI</Text>
+          <View style={styles.headerLeft}>
+            <Image 
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
           <View style={styles.headerRight}>
             {isAuthenticated ? (
               <TouchableOpacity onPress={handleLogout} style={styles.authButton}>
@@ -97,7 +102,7 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Welcome Card */}
+
         <View style={styles.welcomeCard}>
           <Text style={styles.welcomeText}>
             {isAuthenticated ? 'Welcome back!' : 'Track your emotional journey'}
@@ -107,7 +112,6 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Main Content */}
         <View style={styles.mainContent}>
           <View style={styles.moodSelectorCard}>
             <Text style={styles.title}>How are you feeling today?</Text>
@@ -135,7 +139,6 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Additional Card */}
           <View style={styles.infoCard}>
             <View style={styles.infoCardHeader}>
               <Ionicons name="information-circle-outline" size={24} color="#555" />
@@ -149,7 +152,6 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation Bar */}
       <BlurView intensity={90} style={styles.bottomNavContainer}>
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem} onPress={() => {}}>
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f7',
   },
   scrollContent: {
-    paddingBottom: 100, // Extra space for bottom nav
+    paddingBottom: 100, 
   },
   header: {
     paddingHorizontal: 16,
@@ -201,6 +203,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: 44,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: 'contain',
   },
   headerTitle: {
     fontSize: 20,

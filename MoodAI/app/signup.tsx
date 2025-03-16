@@ -8,7 +8,8 @@ import {
   SafeAreaView, 
   Alert,
   StatusBar,
-  ScrollView
+  ScrollView,
+  Image
 } from 'react-native';
 import { supabase } from './supabaseClient';
 import { useRouter } from 'expo-router';
@@ -57,19 +58,22 @@ export default function SignupScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Create Account</Text>
-          <View style={{ width: 24 }} /> 
+          <View style={styles.headerLeft}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Image 
+              source={require('../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Welcome Card */}
         <View style={styles.welcomeCard}>
           <Text style={styles.welcomeText}>Join MoodAI</Text>
           <Text style={styles.subtitleText}>
@@ -77,7 +81,6 @@ export default function SignupScreen() {
           </Text>
         </View>
 
-        {/* Signup Form Card */}
         <View style={styles.formCard}>
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Your Name</Text>
@@ -140,7 +143,6 @@ export default function SignupScreen() {
           </Text>
         </View>
 
-        {/* Login Link */}
         <TouchableOpacity 
           style={styles.loginLink} 
           onPress={() => router.back()}
@@ -176,10 +178,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
   },
   scrollContent: {
     padding: 16,

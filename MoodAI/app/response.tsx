@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, SafeAreaView, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -16,13 +16,12 @@ export default function ResponseScreen() {
   const params = useLocalSearchParams();
   const colorScheme = useColorScheme();
   
-  // Parse the AI response from params with error handling
   let aiResponse: AIResponse | null = null;
   try {
     const responseString = params.aiResponse ? JSON.parse(params.aiResponse as string) : null;
     if (responseString) {
       aiResponse = JSON.parse(responseString);
-      console.log('Parsed AI Response:', aiResponse); // For debugging
+      console.log('Parsed AI Response:', aiResponse); 
     }
   } catch (error) {
     console.error('Error parsing AI response:', error);
@@ -44,63 +43,74 @@ export default function ResponseScreen() {
   };
 
   return (
-    <View style={[styles.container, mood ? { backgroundColor: mood.color + '20' } : null]}>
-      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-        <IconSymbol 
-          size={24} 
-          name="arrow.left" 
-          color={Colors[colorScheme ?? 'light'].text} 
-        />
-      </TouchableOpacity>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
       
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.contentContainer}>
-          {mood && (
-            <View style={styles.moodSection}>
-              <Text style={styles.emoji}>{mood.emoji}</Text>
-              <Text style={styles.title}>You're feeling {mood.label}</Text>
-            </View>
-          )}
-
-          {aiResponse && (
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Ionicons name="chatbubbles-outline" size={24} color="#333" />
-                <Text style={styles.cardTitle}>Analysis & Recommendations</Text>
-              </View>
-              
-              {aiResponse.text && (
-                <Text style={styles.summaryText}>{aiResponse.text}</Text>
-              )}
-              
-              {aiResponse.personalized_exercises && aiResponse.personalized_exercises.length > 0 && (
-                <View style={styles.actionItems}>
-                  <Text style={styles.sectionTitle}>Suggested Actions</Text>
-                  {aiResponse.personalized_exercises.map((exercise, index) => (
-                    <View key={index} style={styles.actionItem}>
-                      <Ionicons name="checkmark-circle" size={20} color="#3498db" />
-                      <Text style={styles.actionItemText}>{exercise}</Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-            </View>
-          )}
-
-          {!aiResponse && (
-            <View style={styles.errorCard}>
-              <Ionicons name="alert-circle-outline" size={40} color="#e74c3c" />
-              <Text style={styles.errorTitle}>Oops!</Text>
-              <Text style={styles.errorText}>We couldn't process the AI response. Please try again.</Text>
-            </View>
-          )}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerLeft}>
+            <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Image 
+              source={require('../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
         </View>
-      </ScrollView>
+      </View>
 
-      <TouchableOpacity style={styles.historyButton} onPress={handleViewHistory}>
-        <Text style={styles.buttonText}>View Mood History</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={[styles.container, mood ? { backgroundColor: mood.color + '20' } : null]}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.contentContainer}>
+            {mood && (
+              <View style={styles.moodSection}>
+                <Text style={styles.emoji}>{mood.emoji}</Text>
+                <Text style={styles.title}>You're feeling {mood.label}</Text>
+              </View>
+            )}
+
+            {aiResponse && (
+              <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <Ionicons name="chatbubbles-outline" size={24} color="#333" />
+                  <Text style={styles.cardTitle}>Analysis & Recommendations</Text>
+                </View>
+                
+                {aiResponse.text && (
+                  <Text style={styles.summaryText}>{aiResponse.text}</Text>
+                )}
+                
+                {aiResponse.personalized_exercises && aiResponse.personalized_exercises.length > 0 && (
+                  <View style={styles.actionItems}>
+                    <Text style={styles.sectionTitle}>Suggested Actions</Text>
+                    {aiResponse.personalized_exercises.map((exercise, index) => (
+                      <View key={index} style={styles.actionItem}>
+                        <Ionicons name="checkmark-circle" size={20} color="#3498db" />
+                        <Text style={styles.actionItemText}>{exercise}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </View>
+            )}
+
+            {!aiResponse && (
+              <View style={styles.errorCard}>
+                <Ionicons name="alert-circle-outline" size={40} color="#e74c3c" />
+                <Text style={styles.errorTitle}>Oops!</Text>
+                <Text style={styles.errorText}>We couldn't process the AI response. Please try again.</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+
+        <TouchableOpacity style={styles.historyButton} onPress={handleViewHistory}>
+          <Text style={styles.buttonText}>View Mood History</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -109,12 +119,47 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f7',
   },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    elevation: 2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 44,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: 'contain',
+  },
   backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    zIndex: 10,
-    padding: 10,
+    padding: 8,
+    marginRight: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
   },
   scrollView: {
     flex: 1,

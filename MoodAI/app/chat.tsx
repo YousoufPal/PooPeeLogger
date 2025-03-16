@@ -8,7 +8,8 @@ import {
   SafeAreaView, 
   ScrollView, 
   KeyboardAvoidingView, 
-  Platform 
+  Platform,
+  Image 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -22,13 +23,27 @@ export default function ChatPage() {
   const [response, setResponse] = useState('');
 
   const handleSend = () => {
-    // Simulate ChatGPT response
     setResponse(`ChatGPT: I see you're feeling ${mood}. Let's talk about it.`);
     setUserInput('');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerLeft}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Image 
+              source={require('../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
+        </View>
+      </View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}
@@ -36,7 +51,6 @@ export default function ChatPage() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Why are you feeling {mood}?</Text>
 
-          {/* Chat Display */}
           <View style={styles.chatContainer}>
             {response ? (
               <View style={styles.responseBubble}>
@@ -45,7 +59,6 @@ export default function ChatPage() {
             ) : null}
           </View>
 
-          {/* Input Section */}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
@@ -59,7 +72,6 @@ export default function ChatPage() {
             </TouchableOpacity>
           </View>
 
-          {/* Voice Record Button */}
           <TouchableOpacity style={styles.voiceButton}>
             <Ionicons name="mic" size={24} color="#fff" />
             <Text style={styles.voiceButtonText}>Record Voice</Text>
@@ -142,5 +154,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     marginLeft: 10,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    elevation: 2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 44,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: 'contain',
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });

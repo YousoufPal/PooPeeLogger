@@ -78,7 +78,7 @@ export default function JournalScreen() {
   const handleSave = async () => {
     const qa_pairs = questions.map((q, i) => `Q: ${q}\nA: ${answers[i]}`).join('\n\n');
     
-    const apiKey = '';
+    const apiKey = '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';
     const data = {
       model: 'gpt-3.5-turbo',
       messages: [
@@ -127,7 +127,6 @@ export default function JournalScreen() {
       });
     } catch (error) {
       console.error("Error saving journal:", error);
-      // Show error to user here
     }
   };
 
@@ -137,7 +136,6 @@ export default function JournalScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
           <Ionicons name="arrow-back" size={24} color="#333" />

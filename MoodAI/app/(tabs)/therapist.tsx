@@ -10,7 +10,8 @@ import {
   Platform,
   SafeAreaView,
   StatusBar,
-  ActivityIndicator
+  ActivityIndicator,
+  Image
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,11 +39,8 @@ export default function TherapistScreen() {
   const router = useRouter();
 
   const generateTherapistResponse = async (userMessage: string) => {
-    // TODO: Integrate with actual AI service
-    // For now, using simple responses
     setIsTyping(true);
-    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API delay
-
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
     const responses = [
       "I understand how you're feeling. Could you tell me more about that?",
       "That sounds challenging. How long have you been feeling this way?",
@@ -83,7 +81,6 @@ export default function TherapistScreen() {
   };
 
   useEffect(() => {
-    // Scroll to bottom when new messages arrive
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
@@ -97,7 +94,15 @@ export default function TherapistScreen() {
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>AI Therapist</Text>
+        <View style={styles.headerContent}>
+          <View style={styles.headerLeft}>
+            <Image 
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
+        </View>
       </View>
 
       <KeyboardAvoidingView 
@@ -149,7 +154,6 @@ export default function TherapistScreen() {
         </View>
       </KeyboardAvoidingView>
 
-      {/* Bottom Navigation */}
       <BlurView intensity={90} style={styles.bottomNavContainer}>
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem} onPress={() => router.push('/')}>
@@ -192,6 +196,23 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
     backgroundColor: '#ffffff',
     alignItems: 'center',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 44,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: 'contain',
   },
   headerTitle: {
     fontSize: 20,

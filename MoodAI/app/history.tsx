@@ -9,7 +9,8 @@ import {
   StatusBar,
   SafeAreaView,
   Animated,
-  Alert
+  Alert,
+  Image
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
@@ -34,7 +35,6 @@ interface GroupedHistory {
   [key: string]: MoodEntry[];
 }
 
-// Example history data - in a real app, you would store and retrieve this from a database or storage
 const moodHistory: MoodEntry[] = [
   { date: '2023-11-21', emoji: '😀', label: 'Happy', color: '#FFD700', notes: 'Had a great day at work. Project was well received.' },
   { date: '2023-11-20', emoji: '😢', label: 'Sad', color: '#1E90FF', notes: 'Missing family today.' },
@@ -45,7 +45,6 @@ const moodHistory: MoodEntry[] = [
   { date: '2023-11-15', emoji: '😌', label: 'Calm', color: '#32CD32', notes: 'Peaceful day reading by the window.' },
 ];
 
-// Group history by month
 const groupByMonth = (history: MoodEntry[]) => {
   const grouped: GroupedHistory = {};
   history.forEach(entry => {
@@ -78,11 +77,9 @@ export default function HistoryScreen() {
   const [expandedMonth, setExpandedMonth] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check authentication status when component mounts
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (!session) {
-        // Show alert and redirect to profile if not authenticated
         Alert.alert(
           'Login Required',
           'Please log in to view your mood history.',
@@ -93,7 +90,6 @@ export default function HistoryScreen() {
       }
     });
 
-    // Listen for authentication state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (!session) {
@@ -112,12 +108,10 @@ export default function HistoryScreen() {
     };
   }, []);
 
-  // If not authenticated, don't render the history content
   if (!session) {
     return null;
   }
 
-  // Filter options
   const filterOptions = [
     { id: 'all', label: 'All' },
     { id: 'happy', label: 'Happy', emoji: '😀' },
@@ -153,20 +147,24 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Mood History</Text>
+          <View style={styles.headerLeft}>
+            <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Image 
+              source={require('../assets/images/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.headerTitle}>MindfulMinds</Text>
+          </View>
           <TouchableOpacity style={styles.settingsButton}>
             <Ionicons name="options-outline" size={24} color="#333" />
           </TouchableOpacity>
         </View>
       </View>
       
-      {/* Filter Tabs */}
       <View style={styles.filterWrapper}>
         <ScrollView 
           horizontal 
@@ -196,7 +194,6 @@ export default function HistoryScreen() {
         </ScrollView>
       </View>
       
-      {/* Mood Stats Card */}
       <View style={styles.statsCard}>
         <Text style={styles.statsTitle}>Your Mood Insights</Text>
         <View style={styles.statsContent}>
@@ -221,7 +218,6 @@ export default function HistoryScreen() {
         </View>
       </View>
       
-      {/* History List */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {groupedHistory.length > 0 ? (
           groupedHistory.map(([month, entries]) => (
@@ -298,7 +294,6 @@ export default function HistoryScreen() {
         <View style={styles.bottomPadding} />
       </ScrollView>
       
-      {/* Bottom Navigation Bar */}
       <BlurView intensity={90} style={styles.bottomNavContainer}>
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem} onPress={() => router.push('/')}>
@@ -349,8 +344,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 44,
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: 'contain',
+  },
   backButton: {
     padding: 8,
+    marginRight: 8,
   },
   headerTitle: {
     fontSize: 20,
@@ -372,28 +379,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   filterTab: {
-    width: 65,     // Increased width
-    height: 65,    // Increased height to match width
+    width: 65,    
+    height: 65,    
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
     backgroundColor: '#f0f0f0',
-    padding: 6,    // Slightly increased padding
+    padding: 6,   
   },
   activeFilterTab: {
     backgroundColor: '#3498db',
   },
   filterText: {
-    fontSize: 12,   // Increased font size
+    fontSize: 12,   
     fontWeight: '500',
     color: '#555',
-    marginTop: 4,   // Increased spacing between emoji and text
+    marginTop: 4,   
     textAlign: 'center',
   },
   filterEmoji: {
-    fontSize: 24,   // Increased emoji size
-    lineHeight: 28, // Adjusted line height
+    fontSize: 24,   
+    lineHeight: 28, 
   },
   activeFilterText: {
     color: '#fff',
