@@ -25,6 +25,7 @@ const moods = [
   { emoji: '😡', label: 'Angry', color: '#DC143C' },
   { emoji: '😌', label: 'Calm', color: '#32CD32' },
   { emoji: '😕', label: 'Confused', color: '#FF8C00' },
+  { emoji: '😫', label: 'Stressed', color: '#9932CC' },
 ];
 
 export default function HomeScreen() {
@@ -41,8 +42,8 @@ export default function HomeScreen() {
       Animated.timing(scaleAnim, { toValue: 1.2, duration: 150, useNativeDriver: true }),
       Animated.timing(scaleAnim, { toValue: 1, duration: 150, useNativeDriver: true })
     ]).start(() => {
-      // Navigate to the chat page with the selected mood
-      router.push({ pathname: '/chat', params: { mood: mood.label } });
+      // Navigate to the journal page with the selected mood
+      router.push({ pathname: '/journal', params: { mood: JSON.stringify(mood) } });
     });
   };
 
@@ -161,9 +162,9 @@ export default function HomeScreen() {
             <Text style={styles.navText}>History</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/explore')}>
-            <Ionicons name="compass-outline" size={24} color="#555" />
-            <Text style={styles.navText}>Explore</Text>
+          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/therapist')}>
+            <Ionicons name="chatbubbles-outline" size={24} color="#555" />
+            <Text style={styles.navText}>Therapist</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.navItem} onPress={() => router.push('/profile')}>

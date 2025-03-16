@@ -89,6 +89,7 @@ export default function RootLayout() {
           <Stack.Screen name="action" />
           <Stack.Screen name="signup" />
           <Stack.Screen name="profile" />
+          <Stack.Screen name="journal" />
           <Stack.Screen name="+not-found" />
         </Stack>
       </SafeAreaView>

@@ -13,9 +13,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="therapist"
         options={{
-          title: 'Explore',
+          title: 'Therapist',
         }}
       />
       <Tabs.Screen

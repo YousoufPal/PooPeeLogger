@@ -22,4 +22,19 @@ def langflow_feedback():
         return (output_message)
 
     except Exception as e:
-        print(f"Error registering user: {e}") 
+        print(f"Error registering user: {e}")
+
+@langflow_bp.route('/analyze', methods=['POST'])
+def analyze():
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    try:
+        return run_flow(
+            message=data.get('message', ''),
+            endpoint=os.getenv("FLOW_ID"),
+            application_token=os.getenv("APPLICATION_TOKEN")
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

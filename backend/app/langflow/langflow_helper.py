@@ -23,6 +23,8 @@ except ImportError:
     warnings.warn("Langflow provides a function to help you upload files to the flow. Please install langflow to use it.")
     upload_file = None
 
+from langchain_community.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
 
 def run_flow(message: str,
   endpoint: str,
@@ -47,3 +49,46 @@ def run_flow(message: str,
 
     response = requests.post(api_url, json=payload, headers=headers)
     return response.json()
+
+def analyze_journal_entry(mood, questions, answers):
+    # Initialize ChatGPT
+    chat = ChatOpenAI(
+        temperature=0.7,
+        model="gpt-4",
+        openai_api_key=os.getenv('OPENAI_API_KEY')
+    )
+
+    # Format the questions and answers for the prompt
+    qa_pairs = "\n".join([f"Q: {q}\nA: {a}" for q, a in zip(questions, answers)])
+
+    # Create the analysis prompt
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are an empathetic AI therapist analyzing a user's journal entry. 
+        Provide a thoughtful analysis of their responses and suggest helpful actions.
+        Format your response as a JSON-like structure with two keys:
+        1. 'summary': A compassionate analysis of their feelings and situation
+        2. 'actionItems': A list of 3-5 specific, actionable suggestions"""),
+        ("user", f"The user is feeling {mood['label']}.\n\nThey answered these questions:\n{qa_pairs}\n\nAnalyze their responses and provide guidance.")
+    ])
+
+    # Get response from ChatGPT
+    response = chat.invoke(prompt.format_messages())
+
+    # Parse the response into sections
+    try:
+        # The response should be in a format like:
+        # {
+        #   "summary": "...",
+        #   "actionItems": ["...", "...", "..."]
+        # }
+        return eval(response.content)
+    except:
+        # Fallback in case the response isn't perfectly formatted
+        return {
+            "summary": response.content[:500],
+            "actionItems": [
+                "Take a few deep breaths",
+                "Write down your thoughts",
+                "Talk to someone you trust"
+            ]
+        }

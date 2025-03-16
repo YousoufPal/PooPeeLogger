@@ -209,9 +209,9 @@ export default function ProfileScreen() {
               <Text style={styles.navText}>History</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.navItem} onPress={() => router.push('/explore')}>
-              <Ionicons name="compass-outline" size={24} color="#555" />
-              <Text style={styles.navText}>Explore</Text>
+            <TouchableOpacity style={styles.navItem} onPress={() => router.push('/therapist')}>
+              <Ionicons name="chatbubbles-outline" size={24} color="#555" />
+              <Text style={styles.navText}>Therapist</Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={styles.navItem}>
@@ -336,9 +336,9 @@ export default function ProfileScreen() {
             <Text style={styles.navText}>History</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/explore')}>
-            <Ionicons name="compass-outline" size={24} color="#555" />
-            <Text style={styles.navText}>Explore</Text>
+          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/therapist')}>
+            <Ionicons name="chatbubbles-outline" size={24} color="#555" />
+            <Text style={styles.navText}>Therapist</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.navItem}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -8,7 +8,8 @@ import {
   Dimensions,
   StatusBar,
   SafeAreaView,
-  Animated
+  Animated,
+  Alert
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
@@ -16,6 +17,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import { supabase } from './supabaseClient';
+import { Session } from '@supabase/supabase-js';
 
 const { width, height } = Dimensions.get('window');
 
@@ -69,10 +72,51 @@ const formatDate = (dateStr: string) => {
 export default function HistoryScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
+  const [session, setSession] = useState<Session | null>(null);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [activeFilter, setActiveFilter] = useState('all');
   const [expandedMonth, setExpandedMonth] = useState<string | null>(null);
-  
+
+  useEffect(() => {
+    // Check authentication status when component mounts
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (!session) {
+        // Show alert and redirect to profile if not authenticated
+        Alert.alert(
+          'Login Required',
+          'Please log in to view your mood history.',
+          [
+            { text: 'OK', onPress: () => router.replace('/(tabs)/profile') }
+          ]
+        );
+      }
+    });
+
+    // Listen for authentication state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        Alert.alert(
+          'Login Required',
+          'Please log in to view your mood history.',
+          [
+            { text: 'OK', onPress: () => router.replace('/(tabs)/profile') }
+          ]
+        );
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // If not authenticated, don't render the history content
+  if (!session) {
+    return null;
+  }
+
   // Filter options
   const filterOptions = [
     { id: 'all', label: 'All' },
@@ -81,6 +125,7 @@ export default function HistoryScreen() {
     { id: 'angry', label: 'Angry', emoji: '😡' },
     { id: 'calm', label: 'Calm', emoji: '😌' },
     { id: 'confused', label: 'Confused', emoji: '😕' },
+    { id: 'stressed', label: 'Stressed', emoji: '😫' },
   ];
   
   const filteredHistory = activeFilter === 'all' 
@@ -264,9 +309,9 @@ export default function HistoryScreen() {
             <Text style={[styles.navText, styles.activeNavText]}>History</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/explore')}>
-            <Ionicons name="compass-outline" size={24} color="#555" />
-            <Text style={styles.navText}>Explore</Text>
+          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/therapist')}>
+            <Ionicons name="chatbubbles-outline" size={24} color="#555" />
+            <Text style={styles.navText}>Therapist</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/profile')}>
