@@ -17,8 +17,11 @@ application_token = os.getenv("APPLICATION_TOKEN")
 @langflow_bp.get("/feedback")
 def langflow_feedback():
     try:
-        example_message = (run_flow("I am feeling sad and stressed", endpoint=flow_id, application_token=application_token))
-        output_message  = json.loads(example_message["outputs"][0]["outputs"][0]["messages"][0]["message"])
+        data = request.get_json()
+        user_input = data.get("user_input", "")
+
+        message = (run_flow(user_input, endpoint=flow_id, application_token=application_token))
+        output_message  = json.loads(message["outputs"][0]["outputs"][0]["messages"][0]["message"])
         return (output_message)
 
     except Exception as e:
