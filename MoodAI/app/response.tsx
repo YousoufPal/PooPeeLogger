@@ -7,9 +7,8 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Ionicons } from '@expo/vector-icons';
 
 interface AIResponse {
-  summary: string;
-  actionItems: string[];
-  langflowInsights?: string;
+  text: string;
+  personalized_exercises: string[];
 }
 
 export default function ResponseScreen() {
@@ -17,9 +16,24 @@ export default function ResponseScreen() {
   const params = useLocalSearchParams();
   const colorScheme = useColorScheme();
   
-  // Parse the AI response from params
-  const aiResponse: AIResponse = params.aiResponse ? JSON.parse(params.aiResponse as string) : null;
-  const mood = params.mood ? JSON.parse(params.mood as string) : null;
+  // Parse the AI response from params with error handling
+  let aiResponse: AIResponse | null = null;
+  try {
+    const responseString = params.aiResponse ? JSON.parse(params.aiResponse as string) : null;
+    if (responseString) {
+      aiResponse = JSON.parse(responseString);
+      console.log('Parsed AI Response:', aiResponse); // For debugging
+    }
+  } catch (error) {
+    console.error('Error parsing AI response:', error);
+  }
+
+  let mood = null;
+  try {
+    mood = params.mood ? JSON.parse(params.mood as string) : null;
+  } catch (error) {
+    console.error('Error parsing mood:', error);
+  }
   
   const handleGoBack = () => {
     router.back();
@@ -41,45 +55,43 @@ export default function ResponseScreen() {
       
       <ScrollView style={styles.scrollView}>
         <View style={styles.contentContainer}>
-          
-{/*           
           {mood && (
             <View style={styles.moodSection}>
               <Text style={styles.emoji}>{mood.emoji}</Text>
               <Text style={styles.title}>You're feeling {mood.label}</Text>
             </View>
           )}
-           */}
 
-
-          {/* AI Analysis Section */}
           {aiResponse && (
             <View style={styles.card}>
               <View style={styles.cardHeader}>
-                <Ionicons name="analytics-outline" size={24} color="#333" />
-                <Text style={styles.cardTitle}>AI Analysis</Text>
+                <Ionicons name="chatbubbles-outline" size={24} color="#333" />
+                <Text style={styles.cardTitle}>Analysis & Recommendations</Text>
               </View>
               
-              <Text>{JSON.stringify(aiResponse)}</Text> {/* Display aiResponse */}
+              {aiResponse.text && (
+                <Text style={styles.summaryText}>{aiResponse.text}</Text>
+              )}
               
-              {/* Action Items
-              <View style={styles.actionItems}>
-                <Text style={styles.sectionTitle}>Recommended Actions:</Text>
-                {aiResponse.actionItems.map((item, index) => (
-                  <View key={index} style={styles.actionItem}>
-                    <Ionicons name="checkmark-circle" size={20} color="#3498db" />
-                    <Text style={styles.actionItemText}>{item}</Text>
-                  </View>
-                ))}
-              </View> */}
-
-              {/* Additional Insights */}
-              {/* {aiResponse.langflowInsights && (
-                <View style={styles.insights}>
-                  <Text style={styles.sectionTitle}>Additional Insights:</Text>
-                  <Text style={styles.insightsText}>{aiResponse.langflowInsights}</Text>
+              {aiResponse.personalized_exercises && aiResponse.personalized_exercises.length > 0 && (
+                <View style={styles.actionItems}>
+                  <Text style={styles.sectionTitle}>Suggested Actions</Text>
+                  {aiResponse.personalized_exercises.map((exercise, index) => (
+                    <View key={index} style={styles.actionItem}>
+                      <Ionicons name="checkmark-circle" size={20} color="#3498db" />
+                      <Text style={styles.actionItemText}>{exercise}</Text>
+                    </View>
+                  ))}
                 </View>
-              )} */}
+              )}
+            </View>
+          )}
+
+          {!aiResponse && (
+            <View style={styles.errorCard}>
+              <Ionicons name="alert-circle-outline" size={40} color="#e74c3c" />
+              <Text style={styles.errorTitle}>Oops!</Text>
+              <Text style={styles.errorText}>We couldn't process the AI response. Please try again.</Text>
             </View>
           )}
         </View>
@@ -161,6 +173,9 @@ const styles = StyleSheet.create({
   },
   actionItems: {
     marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 20,
   },
   actionItem: {
     flexDirection: 'row',
@@ -175,17 +190,30 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     lineHeight: 22,
   },
-  insights: {
-    marginTop: 24,
-    paddingTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
+  errorCard: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  insightsText: {
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#e74c3c',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  errorText: {
     fontSize: 16,
     color: '#666',
-    lineHeight: 24,
-    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 22,
   },
   historyButton: {
     backgroundColor: '#3498db',

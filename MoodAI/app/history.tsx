@@ -167,32 +167,34 @@ export default function HistoryScreen() {
       </View>
       
       {/* Filter Tabs */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
-        contentContainerStyle={styles.filterContainer}
-      >
-        {filterOptions.map((option) => (
-          <TouchableOpacity 
-            key={option.id} 
-            style={[
-              styles.filterTab,
-              activeFilter === option.id && styles.activeFilterTab
-            ]}
-            onPress={() => setActiveFilter(option.id)}
-          >
-            {option.emoji && <Text style={styles.filterEmoji}>{option.emoji}</Text>}
-            <Text 
+      <View style={styles.filterWrapper}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={styles.filterContainer}
+        >
+          {filterOptions.map((option) => (
+            <TouchableOpacity 
+              key={option.id} 
               style={[
-                styles.filterText,
-                activeFilter === option.id && styles.activeFilterText
+                styles.filterTab,
+                activeFilter === option.id && styles.activeFilterTab
               ]}
+              onPress={() => setActiveFilter(option.id)}
             >
-              {option.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+              {option.emoji && <Text style={styles.filterEmoji}>{option.emoji}</Text>}
+              <Text 
+                style={[
+                  styles.filterText,
+                  activeFilter === option.id && styles.activeFilterText
+                ]}
+              >
+                {option.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
       
       {/* Mood Stats Card */}
       <View style={styles.statsCard}>
@@ -345,6 +347,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: 44,
   },
   backButton: {
     padding: 8,
@@ -357,39 +360,47 @@ const styles = StyleSheet.create({
   settingsButton: {
     padding: 8,
   },
-  filterContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 8, // Reduced from 12
+  filterWrapper: {
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+    paddingVertical: 12,
+  },
+  filterContainer: {
+    paddingHorizontal: 16,
+    gap: 10,
+    flexDirection: 'row',
   },
   filterTab: {
-    flexDirection: 'row',
+    width: 65,     // Increased width
+    height: 65,    // Increased height to match width
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 10, // Reduced from 16
-    paddingVertical: 5, // Reduced from 8
-    marginRight: 10,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: '#f0f0f0',
+    padding: 6,    // Slightly increased padding
   },
   activeFilterTab: {
     backgroundColor: '#3498db',
   },
   filterText: {
-    fontSize: 14,
+    fontSize: 12,   // Increased font size
     fontWeight: '500',
     color: '#555',
+    marginTop: 4,   // Increased spacing between emoji and text
+    textAlign: 'center',
   },
   filterEmoji: {
-    fontSize: 16,
-    marginRight: 4,
+    fontSize: 24,   // Increased emoji size
+    lineHeight: 28, // Adjusted line height
   },
   activeFilterText: {
     color: '#fff',
   },
   statsCard: {
     margin: 16,
+    marginTop: 12,
     padding: 16,
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -409,9 +420,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    paddingHorizontal: 8,
   },
   statItem: {
     alignItems: 'center',
+    flex: 1,
   },
   statNumber: {
     fontSize: 24,
@@ -425,11 +438,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginTop: 4,
+    textAlign: 'center',
   },
   statDivider: {
     height: 30,
     width: 1,
     backgroundColor: '#e0e0e0',
+    marginHorizontal: 8,
   },
   scrollView: {
     flex: 1,
@@ -442,7 +457,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
     marginBottom: 8,
   },
   monthTitle: {
@@ -471,13 +486,16 @@ const styles = StyleSheet.create({
   dateEmojiContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   historyEmoji: {
     fontSize: 24,
     marginRight: 12,
+    width: 32,
+    textAlign: 'center',
   },
   historyDetails: {
-    flexDirection: 'column',
+    flex: 1,
   },
   historyDate: {
     fontSize: 14,
@@ -504,20 +522,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#444',
     lineHeight: 20,
+    paddingRight: 8,
   },
   actionButtons: {
     flexDirection: 'row',
     marginTop: 16,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
   },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 20,
+    marginRight: 24,
   },
   actionText: {
     fontSize: 14,
     color: '#3498db',
-    marginLeft: 4,
+    marginLeft: 6,
   },
   emptyState: {
     alignItems: 'center',
